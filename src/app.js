@@ -51,8 +51,6 @@ let shoppingList = [
     },
 ];
 
-// MUDAR O 5001 PARA 5000 ANTES DE ENTREGAR O PROJETO
-
 app.get("/items", (req, res) => {
 
     const { type, name } = req.query;
@@ -87,13 +85,11 @@ app.post("/items", (req, res) => {
     const { name, quantity, type } = req.body;
 
     if (!name || !quantity || !type) {
-        res.status(httpStatus.UNPROCESSABLE_ENTITY).send("Todos os campos são obrigatórios!");
-        return;
+        return res.status(httpStatus.UNPROCESSABLE_ENTITY).send("Todos os campos são obrigatórios!");
     }
 
-    if (shoppingList.find(name => shoppingList.name === name)) {
-        res.status(httpStatus.CONFLICT).send("Este produto já existe!");
-        return;
+    if (shoppingList.find(existingName => existingName.name === name)) {
+        return res.status(httpStatus.CONFLICT).send("Este produto já existe!");
     }
 
     shoppingList.push({
@@ -104,7 +100,6 @@ app.post("/items", (req, res) => {
     res.status(httpStatus.CREATED).send("Item adicionado com sucesso!");
 })
 
-// MUDAR O 5001 PARA 5000 ANTES DE ENTREGAR O PROJETO
-app.listen(5001, () => {
-    console.log("Rodando em http://localhost:5000");
+app.listen(5000, () => {
+    console.log("Servidor rodando em http://localhost:5000");
 });
