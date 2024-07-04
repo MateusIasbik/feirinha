@@ -60,32 +60,44 @@ app.get("/items", (req, res) => {
 
     if (type) {
         filterItems = filterItems.filter(item => item.type === type);
-    } 
+    }
     if (name) {
         filterItems = filterItems.filter(item => item.name === name)
-    } 
-        res.status(httpStatus.OK).send(filterItems);
+    }
+    res.status(httpStatus.OK).send(filterItems);
 })
 
+app.get("/items/:id", (req, res) => {
 
+    const id = Number(req.params.id);
+    const itemID = shoppingList.find(item => item.id === id);
+
+    if (!Number.isInteger(id) || id <= 0) {
+        res.status(httpStatus.BAD_REQUEST).send("Busque apenas por números inteiros positivos");
+    }
+    if (!itemID) {
+        res.status(httpStatus.NOT_FOUND).send("ID não encontrado");
+    }
+    res.status(httpStatus.OK).send(itemID);
+})
 
 app.post("/items", (req, res) => {
 
     const item = req.body;
-    const {name, quantity, type} = req.body;
+    const { name, quantity, type } = req.body;
 
-    if(!name || !quantity || !type) {
+    if (!name || !quantity || !type) {
         res.status(httpStatus.UNPROCESSABLE_ENTITY).send("Todos os campos são obrigatórios!");
         return;
     }
 
-    if(shoppingList.find(name => shoppingList.name === name)) {
+    if (shoppingList.find(name => shoppingList.name === name)) {
         res.status(httpStatus.CONFLICT).send("Este produto já existe!");
         return;
     }
 
     shoppingList.push({
-        id: shoppingList.length + 1, 
+        id: shoppingList.length + 1,
         ...item
     });
 
@@ -95,4 +107,4 @@ app.post("/items", (req, res) => {
 // MUDAR O 5001 PARA 5000 ANTES DE ENTREGAR O PROJETO
 app.listen(5001, () => {
     console.log("Rodando em http://localhost:5000");
-  });
+});
